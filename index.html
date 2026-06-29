@@ -308,6 +308,67 @@ footer .g{color:var(--gold3)}
 .adm-btn-red:hover{background:rgba(248,81,73,.1);}
 .adm-btn-ghost{background:transparent;color:#8b949e;border-color:#30363d;}
 .adm-btn-ghost:hover{color:#e6edf3;}
+.adm-btn-github{background:#238636;color:#fff;border-color:#238636;}
+.adm-btn-github:hover{background:#2ea043;}
+
+/* ── GITHUB MODAL ── */
+#gh-modal-bg{
+  position:fixed;inset:0;z-index:3000;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#gh-modal-bg.open{display:flex;}
+#gh-modal{
+  background:#161b22;border:1px solid #30363d;border-radius:14px;
+  width:100%;max-width:460px;padding:24px;
+  font-family:'Cairo',sans-serif;
+}
+#gh-modal h3{font-size:1rem;font-weight:700;color:#e6edf3;margin-bottom:6px;}
+#gh-modal .gh-sub{font-size:.75rem;color:#8b949e;margin-bottom:18px;line-height:1.6;}
+#gh-modal .gh-sub a{color:#58a6ff;text-decoration:none;}
+#gh-modal .gh-sub a:hover{text-decoration:underline;}
+.gh-field{margin-bottom:13px;}
+.gh-field label{display:block;font-size:.73rem;color:#8b949e;margin-bottom:5px;}
+.gh-field input{
+  width:100%;background:#21262d;border:1px solid #30363d;
+  border-radius:8px;padding:9px 12px;color:#e6edf3;
+  font-family:'Cairo',sans-serif;font-size:.85rem;
+  direction:ltr;text-align:left;
+}
+.gh-field input:focus{outline:none;border-color:#c8963c;}
+.gh-field .gh-hint{font-size:.67rem;color:#6e7681;margin-top:4px;direction:rtl;}
+#gh-status{
+  margin:12px 0;padding:10px 12px;border-radius:8px;
+  font-size:.8rem;font-weight:700;display:none;line-height:1.5;
+}
+#gh-status.ok{background:rgba(63,185,80,.1);border:1px solid #3fb950;color:#3fb950;display:block;}
+#gh-status.err{background:rgba(248,81,73,.1);border:1px solid #f85149;color:#f85149;display:block;}
+#gh-status.loading{background:rgba(88,166,255,.08);border:1px solid #58a6ff;color:#58a6ff;display:block;}
+.gh-actions{display:flex;gap:8px;margin-top:6px;}
+#gh-push-btn{
+  flex:1;padding:10px;border-radius:8px;
+  background:#238636;border:1px solid #238636;
+  color:#fff;font-family:'Cairo',sans-serif;
+  font-size:.88rem;font-weight:700;cursor:pointer;
+  transition:.15s;
+}
+#gh-push-btn:hover{background:#2ea043;}
+#gh-push-btn:disabled{opacity:.5;cursor:not-allowed;}
+.gh-cancel{
+  padding:10px 16px;border-radius:8px;
+  background:transparent;border:1px solid #30363d;
+  color:#8b949e;font-family:'Cairo',sans-serif;
+  font-size:.85rem;cursor:pointer;transition:.15s;
+}
+.gh-cancel:hover{color:#e6edf3;}
+.gh-steps{
+  background:#0d1117;border:1px solid #21262d;
+  border-radius:8px;padding:12px 14px;margin-bottom:16px;
+  font-size:.73rem;color:#8b949e;line-height:2;
+}
+.gh-steps strong{color:#f0c96a;}
+.gh-steps a{color:#58a6ff;text-decoration:none;}
+.gh-steps a:hover{text-decoration:underline;}
 
 .adm-body{
   display:flex;flex:1;overflow:hidden;
@@ -1355,6 +1416,7 @@ btns.forEach(b=>b.addEventListener('click',()=>{
     <div class="adm-actions">
       <button class="adm-btn adm-btn-blue" onclick="admAddItem()">＋ إضافة صنف</button>
       <button class="adm-btn adm-btn-green" onclick="admExport()">📥 تصدير المنيو</button>
+      <button class="adm-btn adm-btn-github" onclick="admGithubOpen()">🚀 رفع على GitHub</button>
       <button class="adm-btn adm-btn-ghost" onclick="admClose()">✕ إغلاق</button>
     </div>
   </div>
@@ -1421,6 +1483,44 @@ btns.forEach(b=>b.addEventListener('click',()=>{
     <div class="adm-mactions">
       <button class="adm-msave" onclick="admSaveItem()">💾 حفظ</button>
       <button class="adm-mcancel" onclick="admCloseModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- GITHUB PUSH MODAL -->
+<div id="gh-modal-bg">
+  <div id="gh-modal">
+    <h3>🚀 رفع المنيو على GitHub</h3>
+    <p class="gh-sub">
+      ادخل بيانات الـ GitHub مرة وحدة وتنحفظ تلقائياً.<br>
+      <a href="https://github.com/settings/tokens/new?description=BaharMenu&scopes=repo" target="_blank">📎 اضغط هنا تسوي Token مجاني</a> — حدد صلاحية <strong style="color:#f0c96a">repo</strong> بس.
+    </p>
+    <div class="gh-steps">
+      <strong>خطوات سريعة:</strong><br>
+      1️⃣ افتح الرابط أعلاه → اسم Token: <em>BaharMenu</em><br>
+      2️⃣ حدد ✅ <strong>repo</strong> → اضغط Generate<br>
+      3️⃣ انسخ الـ Token وحطه أدناه<br>
+      4️⃣ اسم الـ Repo مثلاً: <strong>baharrestocafe/baharrestocafe.github.io</strong>
+    </div>
+    <div class="gh-field">
+      <label>GitHub Token</label>
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"/>
+      <div class="gh-hint">ينحفظ محلياً على جهازك بس، ما يروح لأي مكان ثاني</div>
+    </div>
+    <div class="gh-field">
+      <label>اسم المستخدم / اسم الـ Repository</label>
+      <input type="text" id="gh-repo" placeholder="username/repo-name" autocomplete="off"/>
+      <div class="gh-hint">مثال: baharrestocafe/baharrestocafe.github.io</div>
+    </div>
+    <div class="gh-field">
+      <label>مسار الملف في الـ Repo</label>
+      <input type="text" id="gh-path" placeholder="index.html" autocomplete="off"/>
+      <div class="gh-hint">الاسم الكامل للملف — الغالب index.html</div>
+    </div>
+    <div id="gh-status"></div>
+    <div class="gh-actions">
+      <button id="gh-push-btn" onclick="admGithubPush()">🚀 ارفع الآن</button>
+      <button class="gh-cancel" onclick="admGithubClose()">إلغاء</button>
     </div>
   </div>
 </div>
@@ -1774,7 +1874,95 @@ function admExport(){
 // ── STORAGE ──
 function admSave(){ localStorage.setItem('admItems',JSON.stringify(admItems)); }
 
-// ── TOAST ──
+// ── GITHUB PUSH ──
+function admGithubOpen(){
+  // Load saved settings
+  const saved = JSON.parse(localStorage.getItem('ghSettings')||'{}');
+  if(saved.token) document.getElementById('gh-token').value = saved.token;
+  if(saved.repo)  document.getElementById('gh-repo').value  = saved.repo;
+  document.getElementById('gh-path').value = saved.path || 'index.html';
+  document.getElementById('gh-status').className='';
+  document.getElementById('gh-status').textContent='';
+  document.getElementById('gh-modal-bg').classList.add('open');
+}
+function admGithubClose(){
+  document.getElementById('gh-modal-bg').classList.remove('open');
+}
+
+async function admGithubPush(){
+  const token = document.getElementById('gh-token').value.trim();
+  const repo  = document.getElementById('gh-repo').value.trim();
+  const path  = document.getElementById('gh-path').value.trim() || 'index.html';
+  const statusEl = document.getElementById('gh-status');
+  const btn = document.getElementById('gh-push-btn');
+
+  if(!token || !repo){
+    statusEl.className='err';
+    statusEl.textContent='❌ ادخل الـ Token واسم الـ Repository أولاً';
+    return;
+  }
+
+  // Save settings (token included — stored locally only)
+  localStorage.setItem('ghSettings', JSON.stringify({token, repo, path}));
+
+  btn.disabled = true;
+  statusEl.className='loading';
+  statusEl.textContent='⏳ جاري تجهيز الملف...';
+
+  try {
+    // Get current file HTML
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+
+    // Get current file SHA (needed for update)
+    statusEl.textContent='⏳ جاري الاتصال بـ GitHub...';
+    const apiBase = `https://api.github.com/repos/${repo}/contents/${path}`;
+    const headers = {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    let sha = null;
+    const getRes = await fetch(apiBase, { headers });
+    if(getRes.ok){
+      const data = await getRes.json();
+      sha = data.sha;
+    } else if(getRes.status !== 404){
+      const err = await getRes.json();
+      throw new Error(err.message || 'خطأ في الاتصال');
+    }
+
+    // Push
+    statusEl.textContent='⏳ جاري الرفع...';
+    const body = {
+      message: `تحديث المنيو — ${new Date().toLocaleString('ar-IQ')}`,
+      content: encoded,
+      ...(sha ? {sha} : {})
+    };
+
+    const putRes = await fetch(apiBase, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body)
+    });
+
+    if(putRes.ok){
+      statusEl.className='ok';
+      statusEl.textContent='✅ تم الرفع بنجاح! سيظهر التحديث خلال دقيقة على الموقع.';
+      admToast('✅ تم الرفع على GitHub!');
+    } else {
+      const err = await putRes.json();
+      throw new Error(err.message || 'فشل الرفع');
+    }
+  } catch(e){
+    statusEl.className='err';
+    statusEl.textContent='❌ ' + (e.message || 'خطأ غير معروف');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 function admToast(msg,color){
   const t=document.getElementById('adm-toast');
   t.textContent=msg;
